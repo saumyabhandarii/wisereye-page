@@ -1,0 +1,41 @@
+# # Node modules
+# node_modules/
+
+# # Environment variables
+# .env
+
+# # Build output
+# dist/
+# build/
+
+# # OS-specific files
+# .DS_Store
+# Thumbs.db
+
+# # Logs
+# *.log
+# logs/
+# npm-debug.log*
+# yarn-debug.log*
+# yarn-error.log*
+
+# # IDEs and editors
+# .vscode/
+# .idea/
+# *.sw?
+
+# # Tailwind CSS watcher output (optional)
+# *.css.map
+
+# # Mac junk files
+# *.DS_Store
+
+# # Local environment overrides
+# .env.local
+# .env.*.local
+
+# # Optional npm cache directory
+# .npm/
+
+# # Output from Tailwind CLI dev build (if not using in production)
+# temp/

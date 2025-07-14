@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Company Registration Form</title>
+  <link rel="stylesheet" href="dist/output.css" />
+
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; }
+    .background {
+      background-image: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1470&q=80');
+      background-size: cover;
+      background-position: center;
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      filter: blur(12px);
+    }
+  </style>
+</head>
+
+<body class="flex items-center justify-center min-h-screen text-white">
+  <div class="background"></div>
+
+  <div class="bg-white bg-opacity-10 backdrop-blur-xl border border-white border-opacity-20 rounded-xl shadow-lg p-10 max-w-xl w-full">
+    <h2 class="text-3xl font-bold text-center mb-8 text-white">Registration Form</h2>
+
+    <form id="registrationForm" class="space-y-6">
+      <div class="flex flex-col md:flex-row gap-6">
+        <div class="w-full">
+          <label for="fname" class="block mb-2 text-sm font-medium">First Name</label>
+          <input type="text" id="fname" name="fname" required placeholder="Enter First Name"
+                 class="w-full px-4 py-2 rounded-md bg-white bg-opacity-20 text-white placeholder-white" />
+        </div>
+        <div class="w-full">
+          <label for="lname" class="block mb-2 text-sm font-medium">Last Name</label>
+          <input type="text" id="lname" name="lname" required placeholder="Enter Last Name"
+                 class="w-full px-4 py-2 rounded-md bg-white bg-opacity-20 text-white placeholder-white" />
+        </div>
+      </div>
+
+      <div>
+        <label for="email" class="block mb-2 text-sm font-medium">Official Email ID</label>
+        <div class="flex gap-2">
+          <input type="email" id="email" name="email" required placeholder="example@company.com"
+                 class="w-full px-4 py-2 rounded-md bg-white bg-opacity-20 text-white placeholder-white" />
+          <button type="button" id="sendOtpBtn"
+                  class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">Send OTP</button>
+        </div>
+      </div>
+
+      <div id="otpSection" class="hidden">
+        <label for="otp" class="block mt-4 mb-2 text-sm font-medium">Enter OTP</label>
+        <input type="text" id="otp" name="otp" placeholder="Enter OTP"
+               class="w-full px-4 py-2 rounded-md bg-white bg-opacity-20 text-white placeholder-white" />
+      </div>
+
+      <div>
+        <label for="tenant" class="block mb-2 text-sm font-medium">M-365 Tenant Name</label>
+        <input type="text" id="tenant" name="tenant" required placeholder="Tenant Name"
+               class="w-full px-4 py-2 rounded-md bg-white bg-opacity-20 text-white placeholder-white" />
+      </div>
+
+      <div class="text-center">
+        <button type="submit"
+                class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-2 rounded-md shadow-md">
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    let otpSent = false;
+
+    const sendOtp = async () => {
+      const email = document.getElementById("email").value.trim();
+      if (!email || !email.includes("@")) {
+        alert("Please enter a valid email.");
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:5000/send-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          otpSent = true;
+          document.getElementById("otpSection").classList.remove("hidden");
+          alert("OTP sent to your email. It is valid for 10 minutes.");
+        } else {
+          alert("Failed to send OTP.");
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Server error while sending OTP.");
+      }
+    };
+
+    const submitForm = async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value.trim();
+      const fname = document.getElementById("fname").value.trim();
+      const lname = document.getElementById("lname").value.trim();
+      const tenant = document.getElementById("tenant").value.trim();
+      const otp = document.getElementById("otp").value.trim();
+
+      if (!otpSent) {
+        alert("Please send OTP first.");
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:5000/verify-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, otp, fname, lname, tenant })
+        });
+
+        const result = await response.json();
+        if (result.verified) {
+          alert("Registration successful!");
+          document.getElementById("registrationForm").reset();
+          document.getElementById("otpSection").classList.add("hidden");
+          otpSent = false;
+        } else {
+          alert(result.message || "Invalid OTP. Please try again.");
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Error verifying OTP.");
+      }
+    };
+
+    document.getElementById("sendOtpBtn").addEventListener("click", sendOtp);
+    document.getElementById("registrationForm").addEventListener("submit", submitForm);
+  </script>
+</body>
+</html>
