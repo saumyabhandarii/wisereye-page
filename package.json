@@ -1,26 +1,12 @@
 {
-  "name": "wisereye-blog",
+  "name": "wisereye-frontend",
   "version": "1.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "concurrently \"npm run serve\" \"npm run watch\"",
-    "serve": "nodemon index.js",
-    "watch": "tailwindcss -i ./css/input.css -o ./dist/output.css --watch",
-    "build": "tailwindcss -i ./css/input.css -o ./dist/output.css --minify",
-    "start": "node index.js"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^17.0.1",
-    "express": "^4.21.2",
-    "mongoose": "^8.3.4",
-    "nodemailer": "^7.0.4"
+    "build": "npx tailwindcss -i ./css/input.css -o ./dist/output.css --minify"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.21",
-    "concurrently": "^8.2.2",
-    "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
-    "nodemon": "^3.1.0"
+    "postcss": "^8.5.6",
+    "autoprefixer": "^10.4.21"
   }
 }
