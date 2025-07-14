@@ -2,7 +2,7 @@
   "name": "wisereye-frontend",
   "version": "1.0.0",
   "scripts": {
-    "build": "npx tailwindcss -i ./css/input.css -o ./dist/output.css --minify"
+    "build": "tailwindcss -i ./css/input.css -o ./dist/output.css --minify"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.17",
